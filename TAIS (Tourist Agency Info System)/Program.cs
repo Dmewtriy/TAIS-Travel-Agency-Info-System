@@ -23,8 +23,6 @@ namespace TAIS__Tourist_Agency_Info_System_
                     var users = loginForm.Users;
                     var username = loginForm.AuthenticatedUsername;
 
-                    MessageBox.Show(username);
-                    MessageBox.Show(string.Join(',', users));
                     /*MainForm mainForm = new MainForm(users[username]);
                     var dialog = mainForm.ShowDialog();
                     if (dialog == DialogResult.Continue)
@@ -47,7 +45,6 @@ namespace TAIS__Tourist_Agency_Info_System_
             }
             else
             {
-                Console.WriteLine("123");
                 /*MainForm mainForm = new MainForm(user);
                 if (mainForm.ShowDialog() == DialogResult.Continue)
                 {
