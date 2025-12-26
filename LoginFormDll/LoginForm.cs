@@ -1,3 +1,5 @@
+п»їusing AuthorizationLibrary;
+using LoginWindow;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -8,23 +10,24 @@ namespace LoginFormDll
     {
         private string _prevLang = string.Empty;
         private bool _prevCaps;
+        private LoginController loginController;
 
         public LoginForm()
         {
             InitializeComponent();
-            // Подписываемся на события для отслеживания смены языка ввода
+            // РџРѕРґРїРёСЃС‹РІР°РµРјСЃСЏ РЅР° СЃРѕР±С‹С‚РёСЏ РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ СЃРјРµРЅС‹ СЏР·С‹РєР° РІРІРѕРґР°
             this.InputLanguageChanged += LoginForm_InputLanguageChanged;
             this.Activated += LoginForm_Activated;
-            this.KeyDown += LoginForm_KeyDown; // Обработка нажатий клавиш на форме
-
-            // Установим корректный начальный статус CapsLock сразу после инициализации компонентов
+            this.KeyDown += LoginForm_KeyDown; // РћР±СЂР°Р±РѕС‚РєР° РЅР°Р¶Р°С‚РёР№ РєР»Р°РІРёС€ РЅР° С„РѕСЂРјРµ
+            loginController = new LoginController(this);
+            // РЈСЃС‚Р°РЅРѕРІРёРј РєРѕСЂСЂРµРєС‚РЅС‹Р№ РЅР°С‡Р°Р»СЊРЅС‹Р№ СЃС‚Р°С‚СѓСЃ CapsLock СЃСЂР°Р·Сѓ РїРѕСЃР»Рµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РєРѕРјРїРѕРЅРµРЅС‚РѕРІ
             bool initialCaps = Control.IsKeyLocked(Keys.CapsLock);
-            statusRight.Text = initialCaps ? "Клавиша CapsLock нажата" : "Клавиша CapsLock не нажата";
+            statusRight.Text = initialCaps ? "РљР»Р°РІРёС€Р° CapsLock РЅР°Р¶Р°С‚Р°" : "РљР»Р°РІРёС€Р° CapsLock РЅРµ РЅР°Р¶Р°С‚Р°";
             _prevCaps = initialCaps;
 
-            // Инициалный апдейт
+            // РРЅРёС†РёР°Р»РЅС‹Р№ Р°РїРґРµР№С‚
             UpdateInputLanguageStatus();
-            // не нужно вызывать UpdateCapsLockStatus() здесь, так как статус уже установлен
+            // РЅРµ РЅСѓР¶РЅРѕ РІС‹Р·С‹РІР°С‚СЊ UpdateCapsLockStatus() Р·РґРµСЃСЊ, С‚Р°Рє РєР°Рє СЃС‚Р°С‚СѓСЃ СѓР¶Рµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ
         }
 
         private void LoginForm_Activated(object? sender, EventArgs e)
@@ -42,19 +45,19 @@ namespace LoginFormDll
         {
             if (e == null) return;
 
-            // CapsLock: обновляем статус (вызов через BeginInvoke чтобы состояние клавиши уже успело измениться)
+            // CapsLock: РѕР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚СѓСЃ (РІС‹Р·РѕРІ С‡РµСЂРµР· BeginInvoke С‡С‚РѕР±С‹ СЃРѕСЃС‚РѕСЏРЅРёРµ РєР»Р°РІРёС€Рё СѓР¶Рµ СѓСЃРїРµР»Рѕ РёР·РјРµРЅРёС‚СЊСЃСЏ)
             if (e.KeyCode == Keys.CapsLock)
             {
                 BeginInvoke((Action)UpdateCapsLockStatus);
-                // не подавляем, чтобы система обработала переключение
+                // РЅРµ РїРѕРґР°РІР»СЏРµРј, С‡С‚РѕР±С‹ СЃРёСЃС‚РµРјР° РѕР±СЂР°Р±РѕС‚Р°Р»Р° РїРµСЂРµРєР»СЋС‡РµРЅРёРµ
             }
 
-            // Enter: выполнить попытку входа (нажать кнопку ОК)
+            // Enter: РІС‹РїРѕР»РЅРёС‚СЊ РїРѕРїС‹С‚РєСѓ РІС…РѕРґР° (РЅР°Р¶Р°С‚СЊ РєРЅРѕРїРєСѓ РћРљ)
             if (e.KeyCode == Keys.Enter)
             {
-                // Выполняем клик кнопки входа
+                // Р’С‹РїРѕР»РЅСЏРµРј РєР»РёРє РєРЅРѕРїРєРё РІС…РѕРґР°
                 okButton.PerformClick();
-                e.SuppressKeyPress = true; // предотвратить звук/дальнейшую обработку
+                e.SuppressKeyPress = true; // РїСЂРµРґРѕС‚РІСЂР°С‚РёС‚СЊ Р·РІСѓРє/РґР°Р»СЊРЅРµР№С€СѓСЋ РѕР±СЂР°Р±РѕС‚РєСѓ
             }
         }
 
@@ -66,14 +69,14 @@ namespace LoginFormDll
                 string display;
                 switch (lang)
                 {
-                    case "ru": display = "Язык ввода: Русский"; break;
-                    case "en": display = "Язык ввода: Английский"; break;
-                    case "fr": display = "Язык ввода: Французский"; break;
-                    case "de": display = "Язык ввода: Немецкий"; break;
-                    case "es": display = "Язык ввода: Испанский"; break;
+                    case "ru": display = "РЇР·С‹Рє РІРІРѕРґР°: Р СѓСЃСЃРєРёР№"; break;
+                    case "en": display = "РЇР·С‹Рє РІРІРѕРґР°: РђРЅРіР»РёР№СЃРєРёР№"; break;
+                    case "fr": display = "РЇР·С‹Рє РІРІРѕРґР°: Р¤СЂР°РЅС†СѓР·СЃРєРёР№"; break;
+                    case "de": display = "РЇР·С‹Рє РІРІРѕРґР°: РќРµРјРµС†РєРёР№"; break;
+                    case "es": display = "РЇР·С‹Рє РІРІРѕРґР°: РСЃРїР°РЅСЃРєРёР№"; break;
                     default:
                         var name = InputLanguage.CurrentInputLanguage?.Culture?.EnglishName ?? "";
-                        display = $"Язык ввода: {name}";
+                        display = $"РЇР·С‹Рє РІРІРѕРґР°: {name}";
                         break;
                 }
 
@@ -85,7 +88,7 @@ namespace LoginFormDll
             }
             catch
             {
-                // Игнорируем ошибки определения языка
+                // РРіРЅРѕСЂРёСЂСѓРµРј РѕС€РёР±РєРё РѕРїСЂРµРґРµР»РµРЅРёСЏ СЏР·С‹РєР°
             }
         }
 
@@ -94,14 +97,45 @@ namespace LoginFormDll
             bool caps = Control.IsKeyLocked(Keys.CapsLock);
             if (caps != _prevCaps)
             {
-                statusRight.Text = caps ? "Клавиша CapsLock нажата" : "Клавиша CapsLock не нажата";
+                statusRight.Text = caps ? "РљР»Р°РІРёС€Р° CapsLock РЅР°Р¶Р°С‚Р°" : "РљР»Р°РІРёС€Р° CapsLock РЅРµ РЅР°Р¶Р°С‚Р°";
                 _prevCaps = caps;
             }
         }
 
         private void OkButton_Click(object? sender, EventArgs e)
         {
-            MessageBox.Show($"User: {userText.Text}\nPass: {new string('*', passText.Text.Length)}", "Вход", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                if (loginController.AuthorizationData())
+                {
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"РћС€РёР±РєР°: {ex.Message}");
+            }
+        }
+
+        public string GetName()
+        {
+            return userText.Text;
+        }
+
+        public string GetPassword()
+        {
+            return passText.Text;
+        }
+
+        public string AuthenticatedUsername
+        {
+            get { return loginController.AuthenticatedUsername; }
+        }
+
+        public Dictionary<string, User> Users
+        {
+            get { return loginController.users; }
         }
 
     }
