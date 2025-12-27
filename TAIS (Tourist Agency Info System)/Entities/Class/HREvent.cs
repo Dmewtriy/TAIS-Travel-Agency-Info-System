@@ -12,7 +12,7 @@ namespace TAIS__Tourist_Agency_Info_System_.Entities.Class
     public class HREvent : BaseEntity
     {
         public HREvent(int id, DateTime eventDate, int workPlaceStreetId, TypeEvent eventType, string profession,
-                       string department, TypeEvent documentType, string reason, int positionId, int employeeId)
+                       string department, string documentType, string reason, int positionId, int employeeId, string orgName)
         {
             Id = id;
             EventDate = eventDate;
@@ -29,10 +29,11 @@ namespace TAIS__Tourist_Agency_Info_System_.Entities.Class
         private int _workPlaceStreetId;
         private string _profession;
         private string _department;
-        private TypeEvent _documentType;
+        private string _documentType;
         private string _reason;
         private int _positionId;
         private int _employeeId;
+        private string _orgName;
 
         [Required(ErrorMessage = "Дата мероприятия обязательна")]
         public DateTime EventDate { get; set; }
@@ -77,8 +78,20 @@ namespace TAIS__Tourist_Agency_Info_System_.Entities.Class
             }
         }
 
+        [MinLength(1, ErrorMessage = "Имя организации не должно быть пусто")]
+        public string OrgName
+        {
+            get => _orgName;
+            set
+            {
+                if (!string.IsNullOrEmpty(value) && string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Имя организации не должно быть пусто", nameof(value));
+                _orgName = value;
+            }
+        }
+
         [Required(ErrorMessage = "Тип документа обязателен")]
-        public TypeEvent DocumentType
+        public string DocumentType
         {
             get => _documentType;
             set => _documentType = value;

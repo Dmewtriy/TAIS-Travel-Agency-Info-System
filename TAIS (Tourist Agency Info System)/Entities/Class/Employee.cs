@@ -4,15 +4,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TAIS__Tourist_Agency_Info_System_.Entities.Interfaces;
+using System.Xml.Linq;
 using TAIS__Tourist_Agency_Info_System_.Entities.Enums;
+using TAIS__Tourist_Agency_Info_System_.Entities.Interfaces;
 
 namespace TAIS__Tourist_Agency_Info_System_.Entities.Class
 {
     public class Employee : BaseEntity
     {
         public Employee(int id, string firstName, string middleName, string lastName, DateTime birthDate, Gender gender,
-                        decimal? workExperience, int streetId)
+                        decimal? workExperience, int streetId, int positionId)
         {
             Id = id;
             FirstName = firstName;
@@ -22,6 +23,7 @@ namespace TAIS__Tourist_Agency_Info_System_.Entities.Class
             Gender = gender;
             WorkExperience = workExperience;
             StreetId = streetId;
+            PositionId = positionId;
         }
 
         private string _firstName;
@@ -29,6 +31,7 @@ namespace TAIS__Tourist_Agency_Info_System_.Entities.Class
         private string _lastName;
         private decimal? _experience;
         private int _streetId;
+        private int _positionId;
 
         [Required(ErrorMessage = "Имя сотрудника обязательно")]
         [MinLength(1, ErrorMessage = "Имя не должно быть пусто")]
@@ -92,5 +95,23 @@ namespace TAIS__Tourist_Agency_Info_System_.Entities.Class
             }
         }
         public virtual Street Street { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "PositionId должен быть положительным")]
+        public int PositionId
+        {
+            get => _positionId;
+            set
+            {
+                if (value <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(value), "PositionId должен быть положительным");
+                _positionId = value;
+            }
+        }
+        public virtual Position Position { get; set; }
+
+        public string GetFullName()
+        {
+            return $"{LastName} {FirstName} {MiddleName}".Trim();
+        }
     }
 }

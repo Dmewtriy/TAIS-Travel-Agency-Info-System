@@ -195,25 +195,19 @@ namespace TAIS__Tourist_Agency_Info_System_.Data.Repositories
             command.ExecuteNonQuery();
 
             command.CommandText = @"
-                CREATE TABLE IF NOT EXISTS Employee (
-                    -- Первичный ключ
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-                    -- Внешние ключи
-                    StreetId INTEGER NOT NULL,
-
-                    -- Личная информация
-                    FirstName TEXT NOT NULL,
-                    MiddleName TEXT,
-                    LastName TEXT NOT NULL,
-                    BirthDate TEXT NOT NULL,
-                    Gender TEXT NOT NULL,
-
-                    -- Профессиональные данные
-                    WorkExperience REAL NOT NULL,
-
-                    -- Ограничения
-                    FOREIGN KEY (StreetId) REFERENCES Street(Id) ON DELETE RESTRICT
+                CREATE TABLE ""Employee"" (
+	                ""Id""	INTEGER,
+	                ""StreetId""	INTEGER NOT NULL,
+	                ""FirstName""	TEXT NOT NULL,
+	                ""MiddleName""	TEXT,
+	                ""LastName""	TEXT NOT NULL,
+	                ""BirthDate""	TEXT NOT NULL,
+	                ""Gender""	TEXT NOT NULL,
+	                ""WorkExperience""	REAL NOT NULL,
+	                ""PositionId""	INTEGER NOT NULL DEFAULT 1,
+	                PRIMARY KEY(""Id"" AUTOINCREMENT),
+	                FOREIGN KEY(""PositionId"") REFERENCES ""Position""(""Id"") ON DELETE RESTRICT,
+	                FOREIGN KEY(""StreetId"") REFERENCES ""Street""(""Id"") ON DELETE RESTRICT
                 );";
             command.ExecuteNonQuery();
 
@@ -387,27 +381,22 @@ namespace TAIS__Tourist_Agency_Info_System_.Data.Repositories
             command.ExecuteNonQuery();
 
             command.CommandText = @"
-                CREATE TABLE IF NOT EXISTS HREvent (
-                    -- Первичный ключ
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-                    -- Информация о мероприятии
-                    EventDate TEXT NOT NULL,
-                    EventType TEXT NOT NULL,
-                    Profession TEXT NOT NULL,
-                    Department TEXT NOT NULL,
-                    DocumentType TEXT NOT NULL,
-                    Reason TEXT NOT NULL,
-
-                    -- Внешние ключи
-                    WorkPlaceStreetId INTEGER NOT NULL,
-                    PositionId INTEGER NOT NULL,
-                    EmployeeId INTEGER NOT NULL,
-
-                    -- Ограничения
-                    FOREIGN KEY (WorkPlaceStreetId) REFERENCES Street(Id) ON DELETE RESTRICT,
-                    FOREIGN KEY (PositionId) REFERENCES Position(Id) ON DELETE RESTRICT,
-                    FOREIGN KEY (EmployeeId) REFERENCES Employee(Id) ON DELETE CASCADE
+                CREATE TABLE ""HREvent"" (
+	                ""Id""	INTEGER,
+	                ""EventDate""	TEXT NOT NULL,
+	                ""EventType""	TEXT NOT NULL,
+	                ""Profession""	TEXT NOT NULL,
+	                ""Department""	TEXT NOT NULL,
+	                ""DocumentType""	TEXT NOT NULL,
+	                ""Reason""	TEXT NOT NULL,
+	                ""WorkPlaceStreetId""	INTEGER NOT NULL,
+	                ""PositionId""	INTEGER NOT NULL,
+	                ""EmployeeId""	INTEGER NOT NULL,
+	                ""OrganizationName""	TEXT,
+	                PRIMARY KEY(""Id"" AUTOINCREMENT),
+	                FOREIGN KEY(""EmployeeId"") REFERENCES ""Employee""(""Id"") ON DELETE CASCADE,
+	                FOREIGN KEY(""PositionId"") REFERENCES ""Position""(""Id"") ON DELETE RESTRICT,
+	                FOREIGN KEY(""WorkPlaceStreetId"") REFERENCES ""Street""(""Id"") ON DELETE RESTRICT
                 );";
             command.ExecuteNonQuery();
         }

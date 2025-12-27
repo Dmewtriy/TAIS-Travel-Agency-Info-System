@@ -24,9 +24,9 @@ namespace TAIS__Tourist_Agency_Info_System_.Entities.Enums
         Dismissal,
     }
 
-    public class TypeEventExtensions
+    public static class TypeEventExtensions
     {
-        public static string GetStringByEnum(TypeEvent value)
+        public static string GetStringByEnum(this TypeEvent value)
         {
             switch (value)
             {
