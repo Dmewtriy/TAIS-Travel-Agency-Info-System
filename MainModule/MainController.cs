@@ -3,6 +3,7 @@ using System;
 using System.Windows.Forms;
 using HelpModule;
 using TAIS__Tourist_Agency_Info_System_.Data.Repositories;
+using EmployeeModule;
 
 namespace TAIS__Tourist_Agency_Info_System_
 {
@@ -13,7 +14,7 @@ namespace TAIS__Tourist_Agency_Info_System_
             InitRepos initRepos = new InitRepos();
             if (fl == false)
             {
-                ContentForm loginForm = new ContentForm(initRepos);
+                EmployeeForm loginForm = new EmployeeForm(initRepos, 0);
                 if (loginForm.ShowDialog() == DialogResult.OK)
                 {
 

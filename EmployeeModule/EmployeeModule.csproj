@@ -8,4 +8,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Authorization\AuthorizationLibrary.csproj" />
+    <ProjectReference Include="..\TAIS (Tourist Agency Info System)\TAIS (Tourist Agency Info System).csproj" />
+  </ItemGroup>
+
 </Project>
